@@ -19,7 +19,7 @@ export class PerfectScrollbarDirective implements OnDestroy, DoCheck, OnChanges,
   private ro: any;
 
   private timeout: number;
-
+  private scrollTopOffset: number = 0;
   private configDiff: any;
 
   @Input() fxShow: boolean = true;
@@ -95,8 +95,10 @@ export class PerfectScrollbarDirective implements OnDestroy, DoCheck, OnChanges,
     if (changes['disabled'] && !changes['disabled'].isFirstChange()) {
       if (changes['disabled'].currentValue !== changes['disabled'].previousValue) {
         if (changes['disabled'].currentValue === true) {
-         this.ngOnDestroy();
+          this.scrollTopOffset = this.elementRef.nativeElement.scrollTop;
+          this.ngOnDestroy();
         } else if (changes['disabled'].currentValue === false) {
+          this.elementRef.nativeElement.scrollTop = this.scrollTopOffset;
           this.ngAfterViewInit();
         }
       }
